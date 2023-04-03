@@ -48,7 +48,10 @@ class VadOrtInferSession:
 
     def __call__(self,
                  input_content: List[Union[np.ndarray, np.ndarray]]) -> np.ndarray:
-        input_dict = dict(zip(self.get_input_names(), input_content))
+        input_dict = {
+            "speech": input_content
+        }
+
         return self.session.run(None, input_dict)[0]
 
     def get_input_names(self, ):

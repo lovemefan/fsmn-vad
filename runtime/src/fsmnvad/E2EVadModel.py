@@ -9,6 +9,8 @@ from typing import List, Tuple, Dict, Any
 
 import numpy as np
 
+from runtime.src.fsmnvad.VadOrtInferSession import VadOrtInferSession
+
 
 class VadStateMachine(Enum):
     kVadInStateStartPointNotDetected = 1
@@ -195,14 +197,14 @@ class WindowDetector(object):
 
 
 class E2EVadModel:
-    def __init__(self, model, vad_post_args: Dict[str, Any], frontend=None):
+    def __init__(self, config, vad_post_args: Dict[str, Any]):
         super(E2EVadModel, self).__init__()
         self.vad_opts = VADXOptions(**vad_post_args)
         self.windows_detector = WindowDetector(self.vad_opts.window_size_ms,
                                                self.vad_opts.sil_to_speech_time_thres,
                                                self.vad_opts.speech_to_sil_time_thres,
                                                self.vad_opts.frame_in_ms)
-        self.model = model
+        self.model = VadOrtInferSession(config)
         # init variables
         self.is_final = False
         self.data_buf_start_frame = 0
@@ -232,7 +234,6 @@ class E2EVadModel:
         self.data_buf_all = None
         self.waveform = None
         self.reset_detection()
-        self.frontend = frontend
 
     def all_reset_detection(self):
         self.is_final = False
@@ -282,21 +283,20 @@ class E2EVadModel:
             self.data_buf_all = self.waveform[0]  # self.data_buf is pointed to self.waveform[0]
             self.data_buf = self.data_buf_all
         else:
-            self.data_buf_all = np.cat((self.data_buf_all, self.waveform[0]))
+            self.data_buf_all = np.concatenate((self.data_buf_all, self.waveform[0]))
         for offset in range(0, self.waveform.shape[1] - frame_sample_length + 1, frame_shift_length):
             self.decibel.append(
-                10 * math.log10((self.waveform[0][offset: offset + frame_sample_length]).square().sum() + \
-                                0.000001))
+                10 * np.log10(np.square(self.waveform[0][offset: offset + frame_sample_length]).sum() + 1e-6))
 
-    def compute_scores(self, feats: np.ndarray, in_cache: Dict[str, np.ndarray]) -> None:
-        scores = self.model(feats, in_cache)  # return B * T * D
+    def compute_scores(self, feats: np.ndarray) -> None:
+        scores = self.model(feats)  # return B * T * D
         assert scores.shape[1] == feats.shape[1], "The shape between feats and scores does not match"
         self.vad_opts.nn_eval_block_size = scores.shape[1]
         self.frm_cnt += scores.shape[1]  # count total frames
         if self.scores is None:
             self.scores = scores  # the first calculation
         else:
-            self.scores = np.cat((self.scores, scores), dim=1)
+            self.scores = np.concatenate((self.scores, scores))
 
     def pop_data_buf_till_frame(self, frame_idx: int) -> None:  # need check again
         while self.data_buf_start_frame < frame_idx:
@@ -390,7 +390,7 @@ class E2EVadModel:
             self.pop_data_to_output_buf(self.confirmed_end_frame, 1, False, True, is_last_frame)
         self.number_end_time_detected += 1
 
-    def maybeon_voice_end_last_frame(self, is_final_frame: bool, cur_frm_idx: int) -> None:
+    def maybe_on_voice_end_last_frame(self, is_final_frame: bool, cur_frm_idx: int) -> None:
         if is_final_frame:
             self.on_voice_end(cur_frm_idx, False, True)
             self.vad_state_machine = VadStateMachine.kVadInStateEndPointDetected
@@ -451,9 +451,10 @@ class E2EVadModel:
     def infer_offline(self, feats: np.ndarray, waveform: np.ndarray, in_cache: Dict[str, np.ndarray] = dict(),
                       is_final: bool = False
                       ) -> Tuple[List[List[List[int]]], Dict[str, np.ndarray]]:
-        self.waveform = waveform  # compute decibel for each frame
+        self.waveform = waveform
         self.compute_decibel()
-        self.compute_scores(feats, in_cache)
+
+        self.compute_scores(feats)
         if not is_final:
             self.detect_common_frames()
         else:
@@ -482,7 +483,7 @@ class E2EVadModel:
         self.max_end_sil_frame_cnt_thresh = max_end_sil - self.vad_opts.speech_to_sil_time_thres
         self.waveform = waveform  # compute decibel for each frame
 
-        self.compute_scores(feats, in_cache)
+        self.compute_scores(feats)
         self.compute_decibel()
         if not is_final:
             self.detect_common_frames()
@@ -541,7 +542,7 @@ class E2EVadModel:
     def detect_one_frame(self, cur_frm_state: FrameState, cur_frm_idx: int, is_final_frame: bool) -> None:
         tmp_cur_frm_state = FrameState.kFrameStateInvalid
         if cur_frm_state == FrameState.kFrameStateSpeech:
-            if math.fabs(1.0) > self.vad_opts.fe_prior_thres:
+            if math.fabs(1.0) > float(self.vad_opts.fe_prior_thres):
                 tmp_cur_frm_state = FrameState.kFrameStateSpeech
             else:
                 tmp_cur_frm_state = FrameState.kFrameStateSil
@@ -570,7 +571,7 @@ class E2EVadModel:
                 elif not is_final_frame:
                     self.on_voice_detected(cur_frm_idx)
                 else:
-                    self.maybeon_voice_end_last_frame(is_final_frame, cur_frm_idx)
+                    self.maybe_on_voice_end_last_frame(is_final_frame, cur_frm_idx)
             else:
                 pass
         elif AudioChangeState.kChangeStateSpeech2Sil == state_change:
@@ -585,7 +586,7 @@ class E2EVadModel:
                 elif not is_final_frame:
                     self.on_voice_detected(cur_frm_idx)
                 else:
-                    self.maybeon_voice_end_last_frame(is_final_frame, cur_frm_idx)
+                    self.maybe_on_voice_end_last_frame(is_final_frame, cur_frm_idx)
             else:
                 pass
         elif AudioChangeState.kChangeStateSpeech2Speech == state_change:
@@ -599,7 +600,7 @@ class E2EVadModel:
                 elif not is_final_frame:
                     self.on_voice_detected(cur_frm_idx)
                 else:
-                    self.maybeon_voice_end_last_frame(is_final_frame, cur_frm_idx)
+                    self.maybe_on_voice_end_last_frame(is_final_frame, cur_frm_idx)
             else:
                 pass
         elif AudioChangeState.kChangeStateSil2Sil == state_change:
@@ -635,7 +636,7 @@ class E2EVadModel:
                             self.vad_opts.lookahead_time_end_point / frm_shift_in_ms):
                         self.on_voice_detected(cur_frm_idx)
                 else:
-                    self.maybeon_voice_end_last_frame(is_final_frame, cur_frm_idx)
+                    self.maybe_on_voice_end_last_frame(is_final_frame, cur_frm_idx)
             else:
                 pass
 
