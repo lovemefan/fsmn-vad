@@ -4,7 +4,6 @@
 # @Author    :lovemefan
 # @Email     :lovemefan@outlook.com
 from typing import Tuple
-from typeguard import check_argument_types
 import numpy as np
 
 from runtime.src.utils.kaldifeat import compute_fbank_feats
@@ -28,7 +27,6 @@ class WavFrontend():
             lfr_n: int = 1,
             dither: float = 1.0
     ) -> None:
-        check_argument_types()
 
         self.fs = fs
         self.window = window
