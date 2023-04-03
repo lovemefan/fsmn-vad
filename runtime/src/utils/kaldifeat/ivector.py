@@ -1,6 +1,6 @@
 import numpy as np
 
-from backend.service.kaldifeat.feature import sliding_window
+from runtime.src.utils.kaldifeat import compute_fbank_feats
 
 
 # ---------- compute-vad ----------
