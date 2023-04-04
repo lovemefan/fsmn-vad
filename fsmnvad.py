@@ -49,10 +49,8 @@ class FSMNVad(object):
         if isinstance(waveform, PathLike):
             if os.path.isfile(waveform):
                 waveform, sample_rate = AudioReader.read_wav_file(waveform)
-
-        assert (
-                sample_rate == 16000
-        ), f"only support 16k sample rate, current sample rate is {sample_rate}"
+        assert sample_rate == 16000,\
+            f"only support 16k sample rate, current sample rate is {sample_rate}"
 
         waveform = waveform[None, ...]
         feats, feats_len = self.extract_feature(waveform)
