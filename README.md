@@ -14,22 +14,26 @@ A enterprise-grade [Voice Activity Detector](https://en.wikipedia.org/wiki/Voice
 
 - **Fast**
 
-  One audio chunk (70s) less than **0.6s** to be processed on mac M1 pro . Under the ONNX runtime, the RTF can be accelerated to **129**
+  One audio (70s) less than **0.6s** to be processed on mac M1 pro . Under the ONNX runtime, the RTF can be accelerated to **129**
 
 - **Lightweight**
+
   Do not need to download the model, the model is loaded from the memory directly.
   and the onnx model size is only **1.6M**.
   Do not need pytorch, torchaudio, etc. dependencies.
 
 - **General**
-
+  
   fsmn VAD was trained on chinese corpora. and it finished anti-noise training, with certain noise rejection ability performs well on audios from different domains with various background noise and quality levels.
-
+  - [x] file vad
+  - [ ] streaming vad
 - **Flexible sampling rate**
-
-  Silero VAD [supports](https://github.com/snakers4/silero-vad/wiki/Quality-Metrics#sample-rate-comparison)  **8000 Hz** and **16000 Hz** [sampling rates](https://en.wikipedia.org/wiki/Sampling_(signal_processing)#Sampling_rate).
-
+  
+  - [x] 16k
+  - [ ] 8k
+ 
 - **Highly Accurate**
+
   coming ... 
   
 - **Highly Portable**
@@ -50,7 +54,7 @@ A enterprise-grade [Voice Activity Detector](https://en.wikipedia.org/wiki/Voice
 
 ```
 
-
+# Citation
 ```
 @inproceedings{zhang2018deep,
   title={Deep-FSMN for large vocabulary continuous speech recognition},
@@ -60,7 +64,8 @@ A enterprise-grade [Voice Activity Detector](https://en.wikipedia.org/wiki/Voice
   year={2018},
   organization={IEEE}
 }
-
+```
+```
 @misc{FunASR,
   author = {Speech Lab, Alibaba Group, China},
   title = {FunASR: A Fundamental End-to-End Speech Recognition Toolkit},
