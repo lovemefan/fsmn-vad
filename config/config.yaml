@@ -1,5 +1,5 @@
 WavFrontend:
-  cmvn_file: /Users/cenglingfan/Code/python-project/fsmn-vad/runtime/onnx/vad/onnx/am.mvn
+  cmvn_file: runtime/onnx/vad/onnx/am.mvn
   frontend_conf:
     fs: 16000
     window: hamming
@@ -11,7 +11,7 @@ WavFrontend:
     lfr_n: 1
 
 FSMN:
-    model_path: /Users/cenglingfan/Code/python-project/fsmn-vad/runtime/onnx/vad/onnx/fsmnvad-offline.onnx
+    model_path: runtime/onnx/vad/onnx/fsmnvad-offline.onnx
     use_cuda: False
     CUDAExecutionProvider:
         device_id: 0

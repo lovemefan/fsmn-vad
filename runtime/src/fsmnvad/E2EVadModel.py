@@ -3,8 +3,10 @@
 # @Time      :2023/4/3 17:02
 # @Author    :lovemefan
 # @Email     :lovemefan@outlook.com
+import logging
 import math
 from enum import Enum
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import numpy as np
@@ -210,7 +212,7 @@ class WindowDetector(object):
 
 
 class E2EVadModel:
-    def __init__(self, config, vad_post_args: Dict[str, Any]):
+    def __init__(self, config, vad_post_args: Dict[str, Any], root_dir: Path):
         super(E2EVadModel, self).__init__()
         self.vad_opts = VADXOptions(**vad_post_args)
         self.windows_detector = WindowDetector(
@@ -219,7 +221,7 @@ class E2EVadModel:
             self.vad_opts.speech_to_sil_time_thres,
             self.vad_opts.frame_in_ms,
         )
-        self.model = VadOrtInferSession(config)
+        self.model = VadOrtInferSession(config, root_dir)
         # init variables
         self.is_final = False
         self.data_buf_start_frame = 0
@@ -371,7 +373,7 @@ class E2EVadModel:
         if end_point_is_sent_end:
             expected_sample_number = max(expected_sample_number, len(self.data_buf))
         if len(self.data_buf) < expected_sample_number:
-            print("error in calling pop data_buf\n")
+            logging.error("error in calling pop data_buf\n")
 
         if len(self.output_data_buf) == 0 or first_frm_is_start_point:
             self.output_data_buf.append(E2EVadSpeechBufWithDoa())
@@ -381,7 +383,7 @@ class E2EVadModel:
             self.output_data_buf[-1].doa = 0
         cur_seg = self.output_data_buf[-1]
         if cur_seg.end_ms != start_frm * self.vad_opts.frame_in_ms:
-            print("warning\n")
+            logging.error("warning\n")
         out_pos = len(cur_seg.buffer)  # cur_seg.buff现在没做任何操作
         data_to_pop = 0
         if end_point_is_sent_end:
@@ -391,7 +393,7 @@ class E2EVadModel:
                 frm_cnt * self.vad_opts.frame_in_ms * self.vad_opts.sample_rate / 1000
             )
         if data_to_pop > len(self.data_buf):
-            print("VAD data_to_pop is bigger than self.data_buf.size()!!!\n")
+            logging.error("VAD data_to_pop is bigger than self.data_buf.size()!!!\n")
             data_to_pop = len(self.data_buf)
             expected_sample_number = len(self.data_buf)
 
@@ -403,7 +405,7 @@ class E2EVadModel:
             # cur_seg.buffer[out_pos++] = data_buf_.back()
             out_pos += 1
         if cur_seg.end_ms != start_frm * self.vad_opts.frame_in_ms:
-            print("Something wrong with the VAD algorithm\n")
+            logging.error("Something wrong with the VAD algorithm\n")
         self.data_buf_start_frame += frm_cnt
         cur_seg.end_ms = (start_frm + frm_cnt) * self.vad_opts.frame_in_ms
         if first_frm_is_start_point:
@@ -426,7 +428,7 @@ class E2EVadModel:
         if self.vad_opts.do_start_point_detection:
             pass
         if self.confirmed_start_frame != -1:
-            print("not reset vad properly\n")
+            logging.error("not reset vad properly\n")
         else:
             self.confirmed_start_frame = start_frame
 
@@ -447,7 +449,7 @@ class E2EVadModel:
         if self.vad_opts.do_end_point_detection:
             pass
         if self.confirmed_end_frame != -1:
-            print("not reset vad properly\n")
+            logging.error("not reset vad properly\n")
         else:
             self.confirmed_end_frame = end_frame
         if not fake_result:

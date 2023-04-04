@@ -13,7 +13,7 @@ from onnxruntime import (GraphOptimizationLevel, InferenceSession,
 
 
 class VadOrtInferSession:
-    def __init__(self, config):
+    def __init__(self, config, root_dir: Path):
         sess_opt = SessionOptions()
         sess_opt.log_severity_level = 4
         sess_opt.enable_cpu_mem_arena = False
@@ -34,10 +34,11 @@ class VadOrtInferSession:
             EP_list = [(cuda_ep, config[cuda_ep])]
         EP_list.append((cpu_ep, cpu_provider_options))
 
-        config["model_path"] = str(config["model_path"])
+        config["model_path"] = root_dir / str(config["model_path"])
         self._verify_model(config["model_path"])
+        logging.info(f"Loading onnx model at {str(config['model_path'])}")
         self.session = InferenceSession(
-            config["model_path"], sess_options=sess_opt, providers=EP_list
+            str(config["model_path"]), sess_options=sess_opt, providers=EP_list
         )
 
         if config["use_cuda"] and cuda_ep not in self.session.get_providers():
