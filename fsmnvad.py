@@ -24,13 +24,15 @@ root_dir = Path(os.path.dirname(os.path.abspath(__file__)))
 
 
 class FSMNVad(object):
-    def __init__(self, config_path=root_dir / 'config/config.yaml', level="info"):
+    def __init__(self, config_path=root_dir / "config/config.yaml", level="info"):
         self.config = read_yaml(config_path)
         self.frontend = WavFrontend(
             cmvn_file=root_dir / self.config["WavFrontend"]["cmvn_file"],
             **self.config["WavFrontend"]["frontend_conf"],
         )
-        self.vad = E2EVadModel(self.config["FSMN"], self.config["vadPostArgs"], root_dir)
+        self.vad = E2EVadModel(
+            self.config["FSMN"], self.config["vadPostArgs"], root_dir
+        )
         setup_logger(level)
 
     def set_parameters(self, mode):
@@ -49,11 +51,11 @@ class FSMNVad(object):
         if isinstance(waveform, PathLike):
             if os.path.isfile(waveform):
                 waveform, sample_rate = AudioReader.read_wav_file(waveform)
-        assert sample_rate == 16000,\
-            f"only support 16k sample rate, current sample rate is {sample_rate}"
+        assert (
+            sample_rate == 16000
+        ), f"only support 16k sample rate, current sample rate is {sample_rate}"
 
         waveform = waveform[None, ...]
         feats, feats_len = self.extract_feature(waveform)
         segments_part, in_cache = self.vad.infer_offline(feats, waveform, is_final=True)
         return segments_part[0]
-

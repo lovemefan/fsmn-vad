@@ -1,6 +1,5 @@
 import numpy as np
 
-
 # ---------- compute-vad ----------
 
 

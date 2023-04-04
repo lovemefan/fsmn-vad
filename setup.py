@@ -20,7 +20,6 @@ requirements = {
         "PyYAML>=6.0",
         "onnxruntime>=1.8.1",
     ],
-
     "setup": [
         "numpy<=1.21.3",
         "pytest-runner",
@@ -51,7 +50,7 @@ setup(
     version=version,
     url="https://github.com/lovemefan/fsmn-vad",
     author="Lovemefan, Yunnan Key Laboratory of Artificial Intelligence, "
-           "Kunming University of Science and Technology, Kunming, Yunnan ",
+    "Kunming University of Science and Technology, Kunming, Yunnan ",
     author_email="lovemefan@outlook.com",
     description="Fsmn-vad: A enterprise-grade Voice Activity Detector (VAD) based on FSMN from modelscope opensource",
     long_description=open(os.path.join(dirname, "README.md"), encoding="utf-8").read(),
