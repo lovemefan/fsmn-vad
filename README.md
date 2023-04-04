@@ -4,7 +4,7 @@
 <h2 align="center">FSMN VAD</h2>
 <br/>
 
-A enterprise-grade [Voice Activity Detector](https://en.wikipedia.org/wiki/Voice_activity_detection) from [modelscope](https://www.modelscope.cn/models/damo/speech_fsmn_vad_zh-cn-16k-common-pytorch/summary) and [funasr](https://github.com/alibaba-damo-academy/FunASR/).
+  A enterprise-grade [Voice Activity Detector](https://en.wikipedia.org/wiki/Voice_activity_detection) from [modelscope](https://www.modelscope.cn/models/damo/speech_fsmn_vad_zh-cn-16k-common-pytorch/summary) and [funasr](https://github.com/alibaba-damo-academy/FunASR/).
 
 
 
@@ -45,16 +45,22 @@ A enterprise-grade [Voice Activity Detector](https://en.wikipedia.org/wiki/Voice
 ## Installation
 
 ```bash
-
+git clone https://github.com/lovemefan/fsmn-vad
+cd fsmn-vad
+python setup.py install
 ```
 
 ## Usage
 
 ```python
-
+from fsmnvad import FSMNVad
+from pathlib import Path
+vad = FSMNVad()
+segments = vad.segments_offline(Path("/path/audio/vad_example.wav"))
+print(segments)
 ```
 
-# Citation
+## Citation
 ```
 @inproceedings{zhang2018deep,
   title={Deep-FSMN for large vocabulary continuous speech recognition},
