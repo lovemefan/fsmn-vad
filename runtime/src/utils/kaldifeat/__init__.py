@@ -1,3 +1,4 @@
 # -*- encoding: utf-8 -*-
-from .feature import compute_fbank_feats, compute_mfcc_feats, apply_cmvn_sliding
+from .feature import (apply_cmvn_sliding, compute_fbank_feats,
+                      compute_mfcc_feats)
 from .ivector import compute_vad

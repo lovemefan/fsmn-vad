@@ -8,7 +8,7 @@ from datetime import datetime
 
 
 def setup_logger(
-        log_level: str = "info",
+    log_level: str = "info",
 ) -> None:
     """Setup log level.
 
