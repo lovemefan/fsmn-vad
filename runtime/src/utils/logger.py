@@ -17,8 +17,6 @@ def setup_logger(
         The log level to use, e.g., "debug", "info", "warning", "error",
         "critical"
     """
-    now = datetime.now()
-    date_time = now.strftime("%Y-%m-%d-%H-%M-%S")
 
     formatter = "%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] %(message)s"
 
