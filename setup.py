@@ -17,7 +17,7 @@ requirements = {
     "install": [
         "setuptools<=65.0",
         "scipy",
-        "PyYAML>=5.3",
+        "PyYAML",
         "onnxruntime",
     ],
     "setup": [
