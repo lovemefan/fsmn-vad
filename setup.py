@@ -18,7 +18,7 @@ requirements = {
         "setuptools>=38.5.1",
         "scipy>=1.4.1",
         "PyYAML>=6.0",
-        "onnxruntime>=1.8.1",
+        "onnxruntime",
     ],
     "setup": [
         "numpy<=1.21.3",
@@ -61,7 +61,7 @@ setup(
     install_requires=install_requires,
     setup_requires=setup_requires,
     extras_require=extras_require,
-    python_requires=">=3.7.0",
+    python_requires=">=3.6.0",
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
