@@ -15,7 +15,7 @@ with open(version_file, "r") as f:
 
 requirements = {
     "install": [
-        "setuptools==65.6.3",
+        "setuptools<=60.0",
         "scipy==1.5.0",
         "PyYAML>=5.3",
         "onnxruntime==1.14.1",

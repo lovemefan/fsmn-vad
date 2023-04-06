@@ -26,9 +26,9 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install setuptools wheel
+        python3 -m pip install --upgrade pip
+        pip3 install setuptools wheel
     - name: Test fsmnvad
       run: |
-        python setup.py install
-        python test/test.py
+        python3 setup.py install
+        python3 test/test.py
