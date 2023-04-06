@@ -15,34 +15,20 @@ with open(version_file, "r") as f:
 
 requirements = {
     "install": [
-        "setuptools<=60.0",
-        "scipy==1.5.0",
+        "setuptools<=65.0",
+        "scipy==1.10.0",
         "PyYAML>=5.3",
-        "onnxruntime==1.14.1",
+        "onnxruntime",
     ],
     "setup": [
-        "numpy<=1.24.2",
-        "pytest-runner",
-    ],
-    "doc": [
-        "Sphinx==2.1.2",
-        "sphinx-rtd-theme>=0.2.4",
-        "sphinx-argparse>=0.2.5",
-        "commonmark==0.8.1",
-        "recommonmark>=0.4.0",
-        "nbsphinx>=0.4.2",
-        "sphinx-markdown-tables>=0.0.12",
+        "numpy==1.24.2",
     ],
     "all": [],
 }
-requirements["all"].extend(requirements["install"] + requirements["doc"])
+requirements["all"].extend(requirements["install"])
 
 install_requires = requirements["install"]
 setup_requires = requirements["setup"]
-
-extras_require = {
-    k: v for k, v in requirements.items() if k not in ["install", "setup"]
-}
 
 
 setup(
@@ -60,7 +46,6 @@ setup(
     package_data={"funasr": ["version.txt"]},
     install_requires=install_requires,
     setup_requires=setup_requires,
-    extras_require=extras_require,
     python_requires=">=3.7.0",
     classifiers=[
         "Programming Language :: Python",
