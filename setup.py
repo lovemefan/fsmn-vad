@@ -15,13 +15,13 @@ with open(version_file, "r") as f:
 
 requirements = {
     "install": [
-        "setuptools>=38.5.1",
-        "scipy>=1.4.1",
+        "setuptools==65.6.3",
+        "scipy==1.5.0",
         "PyYAML>=6.0",
-        "onnxruntime",
+        "onnxruntime>=1.6.1",
     ],
     "setup": [
-        "numpy<=1.21.3",
+        "numpy<=1.24.2",
         "pytest-runner",
     ],
     "doc": [
@@ -61,11 +61,10 @@ setup(
     install_requires=install_requires,
     setup_requires=setup_requires,
     extras_require=extras_require,
-    python_requires=">=3.6.0",
+    python_requires=">=3.7.0",
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
