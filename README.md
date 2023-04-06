@@ -4,6 +4,14 @@
 <h2 align="center">FSMN VAD</h2>
 <br/>
 
+
+![python3.7](https://img.shields.io/badge/python-3.7-green.svg)
+![python3.8](https://img.shields.io/badge/python-3.8-green.svg)
+![python3.9](https://img.shields.io/badge/python-3.9-green.svg)
+![python3.10](https://img.shields.io/badge/python-3.10-green.svg)
+
+
+
   A enterprise-grade [Voice Activity Detector](https://en.wikipedia.org/wiki/Voice_activity_detection) from [modelscope](https://www.modelscope.cn/models/damo/speech_fsmn_vad_zh-cn-16k-common-pytorch/summary) and [funasr](https://github.com/alibaba-damo-academy/FunASR/).
 
 
