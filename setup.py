@@ -17,8 +17,8 @@ requirements = {
     "install": [
         "setuptools==65.6.3",
         "scipy==1.5.0",
-        "PyYAML>=6.0",
-        "onnxruntime>=1.6.1",
+        "PyYAML>=5.3",
+        "onnxruntime==1.14.1",
     ],
     "setup": [
         "numpy<=1.24.2",
