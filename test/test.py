@@ -3,8 +3,8 @@
 # @Time      :2023/4/4 17:00
 # @Author    :lovemefan
 # @Email     :lovemefan@outlook.com
-from fsmnvad import FSMNVad
+import fsmnvad
 from pathlib import Path
-vad = FSMNVad()
+vad = fsmnvad.FSMNVad()
 segments = vad.segments_offline(Path("vad_example.wav"))
 print(segments)

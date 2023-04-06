@@ -7,7 +7,7 @@ from typing import Tuple
 
 import numpy as np
 
-from runtime.src.utils.kaldifeat import compute_fbank_feats
+from fsmnvad.runtime.src.utils.kaldifeat import compute_fbank_feats
 
 
 class WavFrontend:

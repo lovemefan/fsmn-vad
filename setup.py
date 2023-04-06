@@ -6,7 +6,7 @@
 import os
 from pathlib import Path
 
-from setuptools import find_packages, setup
+from setuptools import find_namespace_packages, setup
 
 dirname = Path(os.path.dirname(__file__))
 version_file = dirname / "version.txt"
@@ -16,7 +16,7 @@ with open(version_file, "r") as f:
 requirements = {
     "install": [
         "setuptools<=65.0",
-        "scipy==1.10.0",
+        "scipy",
         "PyYAML>=5.3",
         "onnxruntime",
     ],
@@ -42,10 +42,9 @@ setup(
     long_description=open(os.path.join(dirname, "README.md"), encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     license="The MIT License",
-    packages=find_packages(include=["funasr*"]),
-    package_data={"funasr": ["version.txt"]},
+    packages=find_namespace_packages(),
+    include_package_data=True,
     install_requires=install_requires,
-    setup_requires=setup_requires,
     python_requires=">=3.7.0",
     classifiers=[
         "Programming Language :: Python",

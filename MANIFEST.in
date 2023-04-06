@@ -1,0 +1,3 @@
+include fsmnvad/config/config.yaml
+include fsmnvad/runtime/onnx/vad/onnx/am.mvn
+include fsmnvad/runtime/onnx/vad/onnx/*.onnx

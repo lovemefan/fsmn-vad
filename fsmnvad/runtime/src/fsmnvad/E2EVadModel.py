@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Tuple
 
 import numpy as np
 
-from runtime.src.fsmnvad.VadOrtInferSession import VadOrtInferSession
+from fsmnvad.runtime.src.fsmnvad.VadOrtInferSession import VadOrtInferSession
 
 
 class VadStateMachine(Enum):

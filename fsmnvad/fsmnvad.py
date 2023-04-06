@@ -14,11 +14,11 @@ from os import PathLike
 from pathlib import Path
 from typing import Union
 
-from runtime.src.fsmnvad.E2EVadModel import E2EVadModel
-from runtime.src.utils.AudioHelper import AudioReader
-from runtime.src.utils.logger import setup_logger
-from runtime.src.utils.tools import read_yaml
-from runtime.src.utils.WavFrontend import WavFrontend
+from fsmnvad.runtime.src.fsmnvad.E2EVadModel import E2EVadModel
+from fsmnvad.runtime.src.utils.AudioHelper import AudioReader
+from fsmnvad.runtime.src.utils.logger import setup_logger
+from fsmnvad.runtime.src.utils.tools import read_yaml
+from fsmnvad.runtime.src.utils.WavFrontend import WavFrontend
 
 root_dir = Path(os.path.dirname(os.path.abspath(__file__)))
 
