@@ -10,7 +10,6 @@ __license__ = "MIT"
 __version__ = "v0.0.1"
 
 import os.path
-from os import PathLike
 from pathlib import Path
 from typing import Union
 
@@ -46,9 +45,9 @@ class FSMNVad(object):
     def is_speech(self, buf, sample_rate=16000):
         assert sample_rate == 16000, "only support 16k sample rate"
 
-    def segments_offline(self, waveform: Union[str, PathLike], sample_rate=16000):
+    def segments_offline(self, waveform: Union[str, Path], sample_rate=16000):
         """get sements of audio"""
-        if isinstance(waveform, PathLike):
+        if isinstance(waveform, Path):
             if os.path.isfile(waveform):
                 waveform, sample_rate = AudioReader.read_wav_file(waveform)
         assert (
