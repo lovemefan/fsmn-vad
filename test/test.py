@@ -6,5 +6,5 @@
 import fsmnvad
 from pathlib import Path
 vad = fsmnvad.FSMNVad()
-segments = vad.segments_offline(Path("vad_example.wav"))
+segments = vad.segments_offline(Path("test/vad_example.wav"))
 print(segments)

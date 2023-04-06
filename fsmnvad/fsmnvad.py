@@ -9,6 +9,7 @@ __copyright__ = "Copyright (C) 2016 lovemefan"
 __license__ = "MIT"
 __version__ = "v0.0.1"
 
+import logging
 import os.path
 from pathlib import Path
 from typing import Union
@@ -48,8 +49,13 @@ class FSMNVad(object):
     def segments_offline(self, waveform: Union[str, Path], sample_rate=16000):
         """get sements of audio"""
         if isinstance(waveform, Path):
+            logging.info(f"load audio {waveform}")
+            if not waveform.exists():
+                raise FileExistsError(f"{waveform} is not exist.")
             if os.path.isfile(waveform):
                 waveform, sample_rate = AudioReader.read_wav_file(waveform)
+            else:
+                raise FileNotFoundError(str(Path))
         assert (
             sample_rate == 16000
         ), f"only support 16k sample rate, current sample rate is {sample_rate}"
