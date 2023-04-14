@@ -14,7 +14,7 @@ import os.path
 from pathlib import Path
 from typing import Union
 
-from fsmnvad.runtime.src.fsmnvad.E2EVadModel import E2EVadModel
+from fsmnvad.runtime.src.fsmnvad.Speech2VadSegmentOffline import E2EVadModelOffline
 from fsmnvad.runtime.src.utils.AudioHelper import AudioReader
 from fsmnvad.runtime.src.utils.logger import setup_logger
 from fsmnvad.runtime.src.utils.tools import read_yaml
@@ -30,7 +30,7 @@ class FSMNVad(object):
             cmvn_file=root_dir / self.config["WavFrontend"]["cmvn_file"],
             **self.config["WavFrontend"]["frontend_conf"],
         )
-        self.vad = E2EVadModel(
+        self.vad = E2EVadModelOffline(
             self.config["FSMN"], self.config["vadPostArgs"], root_dir
         )
         setup_logger(level)
@@ -39,8 +39,8 @@ class FSMNVad(object):
         pass
 
     def extract_feature(self, waveform):
-        fbank, _ = self.frontend.forward_fbank(waveform)
-        feats, feats_len = self.frontend.forward_lfr_cmvn(fbank)
+        fbank, _ = self.frontend.fbank(waveform)
+        feats, feats_len = self.frontend.lfr_cmvn(fbank)
         return feats, feats_len
 
     def is_speech(self, buf, sample_rate=16000):
@@ -60,7 +60,10 @@ class FSMNVad(object):
             sample_rate == 16000
         ), f"only support 16k sample rate, current sample rate is {sample_rate}"
 
-        waveform = waveform[None, ...]
         feats, feats_len = self.extract_feature(waveform)
-        segments_part, in_cache = self.vad.infer_offline(feats, waveform, is_final=True)
+        waveform = waveform[None, ...]
+        segments_part, in_cache = self.vad.infer_offline(feats[None, ...], waveform, is_final=True)
         return segments_part[0]
+
+    def segments_online(self):
+        pass

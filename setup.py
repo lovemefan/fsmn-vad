@@ -16,7 +16,7 @@ with open(version_file, "r") as f:
 requirements = {
     "install": [
         "setuptools<=65.0",
-        "scipy",
+        "kaldi_native_fbank",
         "PyYAML",
         "onnxruntime==1.14.1",
     ],

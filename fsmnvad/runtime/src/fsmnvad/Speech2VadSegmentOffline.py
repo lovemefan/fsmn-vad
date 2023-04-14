@@ -211,9 +211,9 @@ class WindowDetector(object):
         return int(self.frame_size_ms)
 
 
-class E2EVadModel:
+class E2EVadModelOffline:
     def __init__(self, config, vad_post_args: Dict[str, Any], root_dir: Path):
-        super(E2EVadModel, self).__init__()
+        super(E2EVadModelOffline, self).__init__()
         self.vad_opts = VADXOptions(**vad_post_args)
         self.windows_detector = WindowDetector(
             self.vad_opts.window_size_ms,
