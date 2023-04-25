@@ -4,3 +4,5 @@
 # @Author    :lovemefan
 # @Email     :lovemefan@outlook.com
 from fsmnvad.fsmnvad import FSMNVad
+from fsmnvad.fsmnvad import FSMNVadOnline
+from fsmnvad.runtime.src.utils.AudioHelper import AudioReader

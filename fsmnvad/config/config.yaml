@@ -11,13 +11,26 @@ WavFrontend:
     lfr_n: 1
 
 FSMN:
-    model_path: runtime/onnx/vad/onnx/fsmnvad-offline.onnx
+    offline_model_path: runtime/onnx/vad/onnx/fsmnvad-offline.onnx
+    online_model_path: runtime/onnx/vad/onnx/fsmnvad-online.onnx
     use_cuda: False
     CUDAExecutionProvider:
         device_id: 0
         arena_extend_strategy: kNextPowerOfTwo
         cudnn_conv_algo_search: EXHAUSTIVE
         do_copy_in_default_stream: true
+    encoder_conf:
+        input_dim: 400
+        input_affine_dim: 140
+        fsmn_layers: 4
+        linear_dim: 250
+        proj_dim: 128
+        lorder: 20
+        rorder: 0
+        lstride: 1
+        rstride: 0
+        output_affine_dim: 140
+        output_dim: 248
         
 vadPostArgs:
   sample_rate: 16000
@@ -41,7 +54,7 @@ vadPostArgs:
   speech_noise_thres: 0.6
   fe_prior_thres: 0.0001
   silence_pdf_num: 1
-  sil_pdf_ids: [0]
+  sil_pdf_ids: [ 0 ]
   speech_noise_thresh_low: -0.1
   speech_noise_thresh_high: 0.3
   output_frame_probs: False

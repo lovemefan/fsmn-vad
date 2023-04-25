@@ -56,9 +56,18 @@ class VadOrtInferSession:
     def __call__(
         self, input_content: List[Union[np.ndarray, np.ndarray]]
     ) -> np.ndarray:
-        input_dict = {"speech": input_content}
+        if isinstance(input_content, list):
+            input_dict = {
+                "speech": input_content[0],
+                "in_cache0": input_content[1],
+                "in_cache1": input_content[2],
+                "in_cache2": input_content[3],
+                "in_cache3": input_content[4],
+            }
+        else:
+            input_dict = {"speech": input_content}
 
-        return self.session.run(None, input_dict)[0]
+        return self.session.run(None, input_dict)
 
     def get_input_names(
         self,

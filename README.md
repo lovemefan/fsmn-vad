@@ -34,7 +34,7 @@
   
   fsmn VAD was trained on chinese corpora. and it finished anti-noise training, with certain noise rejection ability performs well on audios from different domains with various background noise and quality levels.
   - [x] file vad
-  - [ ] streaming vad
+  - [x] streaming vad
 - **Flexible sampling rate**
   
   - [x] 16k
@@ -66,6 +66,30 @@ from pathlib import Path
 vad = FSMNVad()
 segments = vad.segments_offline(Path("/path/audio/vad_example.wav"))
 print(segments)
+```
+
+```python
+from fsmnvad import FSMNVadOnline
+from fsmnvad import AudioReader
+in_cache = []
+speech, sample_rate = AudioReader.read_wav_file('/path/audio/vad_example.wav')
+speech_length = speech.shape[0]
+
+sample_offset = 0
+step = 1600
+vad_online = FSMNVadOnline()
+
+for sample_offset in range(0, speech_length, min(step, speech_length - sample_offset)):
+    if sample_offset + step >= speech_length - 1:
+        step = speech_length - sample_offset
+        is_final = True
+    else:
+        is_final = False
+    segments_result, in_cache = vad_online.segments_online(
+        speech[sample_offset: sample_offset + step],
+        in_cache=in_cache, is_final=is_final)
+    if segments_result:
+        print(segments_result)
 ```
 
 ## Citation
