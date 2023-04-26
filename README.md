@@ -22,7 +22,7 @@
 
 - **Fast**
 
-  One audio (70s) less than **0.6s** to be processed on mac M1 pro . Under the ONNX runtime, the RTF can be accelerated to **129**
+  One audio (70s) less than **0.6s** to be processed on mac M1 pro . Under the ONNX runtime, the RTF can be accelerated to **0.0077**
 
 - **Lightweight**
 
